@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "209870205197",
+    "firebase_url": "https://mealbook-a2243.firebaseio.com",
+    "project_id": "mealbook-a2243",
+    "storage_bucket": "mealbook-a2243.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209870205197:android:f2480c9e3720392bc30044",
+        "android_client_info": {
+          "package_name": "com.applabour.mealbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209870205197-1dfp62nkoarlqq8hdivg2jittbb4enqu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaTepoo4NiynmD9iQDtFxS4gHV0-8K5BQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209870205197-1dfp62nkoarlqq8hdivg2jittbb4enqu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
