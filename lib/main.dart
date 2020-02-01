@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mealbook/auth/auth.dart';
 import 'package:mealbook/auth/login_page.dart';
 import 'package:mealbook/home_page.dart';
+import 'package:mealbook/providers/book_provider.dart';
 import 'package:provider/provider.dart';
 
 void main()=> runApp(MyApp());
@@ -18,7 +19,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged,),
-        ChangeNotifierProvider(create:(_)=> AuthService(),)
+        ChangeNotifierProvider(create:(_)=> AuthService(),),
+        ChangeNotifierProvider(create:(_)=> BookProvider(),)
     ],
     child: MaterialApp(
       title: 'Meal Book',

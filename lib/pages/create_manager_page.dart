@@ -53,6 +53,14 @@ class _ManagerFormState extends State<ManagerForm> {
 
                   // Validate will return true if is valid, or false if invalid.
                   if (form.validate()) {
+                    
+                    List<String> splitNameList=_name.split(" ");
+                    List<String> indexedList=[];
+
+                    for(int i=0; i<splitNameList.length; i++){
+                      indexedList.add(splitNameList[i].toLowerCase());
+                      print(indexedList);
+                    }
                      //create a system in database
                       String _id = ref.documentID;
                       setPanel() {
@@ -60,6 +68,7 @@ class _ManagerFormState extends State<ManagerForm> {
                           {
                             'name': _name,
                             'bookId': _id,
+                            'indexes':indexedList,
                           },
                         );
                         ref.collection('Managers').document().setData({
