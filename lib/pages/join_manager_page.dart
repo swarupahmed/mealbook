@@ -1,18 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mealbook/models/book_model.dart';
+import 'package:provider/provider.dart';
 
-class JoinManager extends StatefulWidget {
+import '../streams.dart';
+
+class JoinBook extends StatefulWidget {
   @override
-  _JoinManagerState createState() => _JoinManagerState();
+  _JoinBookState createState() => _JoinBookState();
 }
 
-class _JoinManagerState extends State<JoinManager> {
+class _JoinBookState extends State<JoinBook> {
   String searchKey;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('find manager'),
+        title: Text('FindBook'),
       ),
       body: Column(
         children: <Widget>[
@@ -25,40 +28,38 @@ class _JoinManagerState extends State<JoinManager> {
               }),
             ),
           ),
-          if(searchKey != "" && searchKey != null)
-          Flexible(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: 
-                  Firestore.instance
-                      .collection('Books')
-                      .where("indexes", arrayContains: searchKey)
-                      .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError)
-                  return new Text('Error: ${snapshot.error}');
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return new Text('Loading...');
-                  default:
-                    return new ListView(
-                      children: snapshot.data.documents
-                          .map((DocumentSnapshot document) {
-                        return new ListTile(
-
-                          title: new Text(document['name']),
-                          subtitle: new Text(document['bookId']),
-                        );
-                      }).toList(),
-                    );
-                }
-              },
+          if (searchKey != "" && searchKey != null)
+            StreamProvider<List<Book>>.value(
+              value: bookStream(searchKey),
+              child: BookList(),
             ),
-          ),
         ],
       ),
     );
   }
 
+
 }
 
+class BookList extends StatefulWidget {
+  @override
+  _BookListState createState() => _BookListState();
+}
+
+class _BookListState extends State<BookList> {
+  @override
+  Widget build(BuildContext context) {
+    var books = Provider.of<List<Book>>(context);
+    return books == null
+        ? CircularProgressIndicator()
+        : ListView.builder(
+            shrinkWrap: true,
+            itemCount: books.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(books[index].name),
+              );
+            },
+          );
+  }
+}

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mealbook/auth/auth.dart';
 import 'package:mealbook/pages/create_manager_page.dart';
 import 'package:mealbook/pages/join_manager_page.dart';
 import 'package:provider/provider.dart';
 
-import 'auth/auth.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                    Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => JoinManager()),
+                    MaterialPageRoute(builder: (context) => JoinBook()),
                   );
                 },
               ),
