@@ -22,10 +22,7 @@ class _JoinBookState extends State<JoinBook> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
-              onChanged: (val) => setState(() {
-                searchKey = val;
-                print(searchKey);
-              }),
+              onChanged: (val) => setState(()=>searchKey = val),
             ),
           ),
           if (searchKey != "" && searchKey != null)
