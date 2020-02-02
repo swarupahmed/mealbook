@@ -37,8 +37,6 @@ class _JoinBookState extends State<JoinBook> {
       ),
     );
   }
-
-
 }
 
 class BookList extends StatefulWidget {
