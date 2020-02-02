@@ -25,6 +25,7 @@ class _JoinBookState extends State<JoinBook> {
               onChanged: (val) => setState(()=>searchKey = val),
             ),
           ),
+          //check for all kinds of null
           if (searchKey != "" && searchKey != null)
             StreamProvider<List<Book>>.value(
               value: bookStream(searchKey),
