@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
@@ -19,15 +20,19 @@ class AuthService with ChangeNotifier {
   }
 
   // wrapping the firebase calls
-   Future createUser(String email, String password) async {
-    await _auth.createUserWithEmailAndPassword(email: email, password: password);
+  Future createUser(String email, String password) async {
+    AuthResult userResult = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    await Firestore.instance
+        .collection('User')
+        .document('${userResult.user.uid}')
+        .setData({"email": userResult.user.email,
+        "joined":DateTime.now()});
   }
 
   ///
   /// wrapping the firebase call to signInWithEmailAndPassword
-  /// `email` String
-  /// `password` String
-  ///
+
   Future<FirebaseUser> loginUser({String email, String password}) async {
     try {
       var result = await FirebaseAuth.instance
@@ -35,7 +40,7 @@ class AuthService with ChangeNotifier {
       // since something changed, let's notify the listeners...
       notifyListeners();
       return result.user;
-    }  catch (e) {
+    } catch (e) {
       throw new AuthException(e.code, e.message);
     }
   }

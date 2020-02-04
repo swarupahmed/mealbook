@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mealbook/auth/auth.dart';
 import 'package:mealbook/pages/create_manager_page.dart';
@@ -14,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    FirebaseUser user= Provider.of<FirebaseUser>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,7 +32,10 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Text('${user.email}',style: TextStyle(fontSize: 16),),
+              SizedBox(height: 8),
               FirstButtons(
                 buttonName: "Create Manager Panel",
                 iconData: Icons.add,
