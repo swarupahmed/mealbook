@@ -56,10 +56,12 @@ class _BookListState extends State<BookList> {
             shrinkWrap: true,
             itemCount: books.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(books[index].name),
-                subtitle: Text(books[index].location),
-                onTap: () => bookDetails(books[index]),
+              return Card(
+                child: ListTile(
+                  title: Text(books[index].name),
+                  subtitle: Text(books[index].location),
+                  onTap: () => bookDetails(books[index]),
+                ),
               );
             },
           );
