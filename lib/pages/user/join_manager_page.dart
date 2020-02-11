@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mealbook/connections/streams.dart';
 import 'package:mealbook/models/book_model.dart';
 import 'package:mealbook/pages/widgets/bookDetails_page.dart';
 import 'package:provider/provider.dart';
 
-import '../streams.dart';
+
 
 class JoinBook extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class _JoinBookState extends State<JoinBook> {
           //check for all kinds of null
           if (searchKey != null && searchKey != "")
             StreamProvider<List<Book>>.value(
-              value: bookStream(searchKey),
+              value: searchBookStream(searchKey),
               child: BookList(),
             ),
         ],

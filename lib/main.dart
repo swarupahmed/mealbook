@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mealbook/auth/auth.dart';
 import 'package:mealbook/auth/login_page.dart';
+import 'package:mealbook/connections/streams.dart';
 import 'package:mealbook/pages/home_page.dart';
 import 'package:mealbook/providers/book_provider.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,9 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context){
     FirebaseUser user=Provider.of<FirebaseUser>(context);
      if(user!=null){
-       return HomePage();
+       return StreamProvider.value(
+         value: userDataStream(user.uid),
+         child: HomePage());
      }else{
        return LoginPage();}
   

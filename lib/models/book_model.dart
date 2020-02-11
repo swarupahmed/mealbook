@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Book {
   String name;
   String location;
@@ -14,16 +16,17 @@ class Book {
       this.createdAt,
       this.joiningRequirements});
 
-  Book.fromSnap(Map<String, dynamic> data) {
+  Book.fromSnap(DocumentSnapshot document) {
+    Map<String, dynamic> data=document.data;
     name = data['name'].toString();
     bookId = data['bookId'].toString();
     description = data['description'].toString();
     location = data['location'].toString();
     createdAt = data['createdAt'].toString();
     joiningRequirements = JoiningRequirements(
-        data["joining_requirements"]["roomNo"],
-        data["joining_requirements"]["floorNo"],
-        data["joining_requirements"]["blockNo"]);
+        data["joining_requirements"]["roomNo"]??'',
+        data["joining_requirements"]["floorNo"]??'',
+        data["joining_requirements"]["blockNo"])??'';
   }
 
   Map<String, dynamic> toJson() {

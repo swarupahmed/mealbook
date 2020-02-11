@@ -1,21 +1,44 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mealbook/auth/auth.dart';
-import 'package:mealbook/pages/create_manager_page.dart';
-import 'package:mealbook/pages/join_manager_page.dart';
+import 'package:mealbook/connections/streams.dart';
+import 'package:mealbook/models/user_model.dart';
+import 'package:mealbook/pages/user/create_admin_page.dart';
+import 'package:mealbook/pages/user/join_manager_page.dart';
 import 'package:provider/provider.dart';
 
+import 'admin/admin_page.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
-    FirebaseUser user= Provider.of<FirebaseUser>(context);
+    var userData = Provider.of<UserData>(context) ?? null;
+    return (userData?.activeBook != null)
+        ? MultiProvider(
+            providers: [
+              StreamProvider.value(
+                value: joinRequestStream(userData.activeBook.bookId),
+              ),
+              StreamProvider.value(
+                value: bookStream(userData.activeBook.bookId),
+              ),
+            ],
+            child: AdminPage(),
+          )
+        : UserHome();
+  }
+}
+
+class UserHome extends StatefulWidget {
+  @override
+  _UserHomeState createState() => _UserHomeState();
+}
+
+class _UserHomeState extends State<UserHome> {
+  @override
+  Widget build(BuildContext context) {
+    var authService = Provider.of<AuthService>(context);
+    FirebaseUser user = Provider.of<FirebaseUser>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,13 +57,16 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text('${user.email}',style: TextStyle(fontSize: 16),),
+              Text(
+                '${user.email}',
+                style: TextStyle(fontSize: 16),
+              ),
               SizedBox(height: 8),
               FirstButtons(
                 buttonName: "Create Manager Panel",
                 iconData: Icons.add,
                 onPressed: () {
-                   Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => CreateManager()),
                   );
@@ -51,21 +77,18 @@ class _HomePageState extends State<HomePage> {
                 buttonName: "Join your Manager",
                 iconData: Icons.search,
                 onPressed: () {
-                   Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => JoinBook()),
                   );
                 },
               ),
             ],
-          ),  
+          ),
         ),
       ),
     );
   }
-}
-
-class SecondRoute {
 }
 
 class FirstButtons extends StatelessWidget {

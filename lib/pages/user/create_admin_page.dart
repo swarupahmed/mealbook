@@ -2,8 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mealbook/models/book_model.dart';
+import 'package:mealbook/pages/admin/admin_page.dart';
 import 'package:mealbook/pages/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
+
+
 
 class CreateManager extends StatelessWidget {
   @override
@@ -23,7 +26,7 @@ class ManagerForm extends StatefulWidget {
 }
 
 class _ManagerFormState extends State<ManagerForm> {
-  DocumentReference bookRef = Firestore.instance.collection('Books').document();
+  Firestore ref = Firestore.instance;
 
   final _formKey = GlobalKey<FormState>();
   String _name, _location, _description;
@@ -35,8 +38,6 @@ class _ManagerFormState extends State<ManagerForm> {
   @override
   Widget build(BuildContext context) {
     FirebaseUser user = Provider.of<FirebaseUser>(context);
-    DocumentReference userRef =
-        Firestore.instance.collection('User').document(user.uid);
     return Form(
         key: _formKey,
         child: Padding(
@@ -135,6 +136,8 @@ class _ManagerFormState extends State<ManagerForm> {
                           _indexer(splitLocationList);
 
                       //create a system in database
+                      DocumentReference bookRef=ref.collection('Books').document();
+                      DocumentReference userRef=ref.collection('User').document(user.uid);
                       String _id = bookRef.documentID;
                       setPanel() async {
                         await bookRef.setData(
@@ -161,9 +164,16 @@ class _ManagerFormState extends State<ManagerForm> {
                           'joined': DateTime.now(),
                         });
                         await userRef
-                            .collection('Active_Books')
+                            .collection('User_Books')
                             .document()
-                            .setData({'name': _name, 'bookId': _id});
+                            .setData({'name': _name, 'bookId': _id, 'admin':true});
+                        await userRef.updateData({
+                          "active_book":{
+                            'book_id':_id,
+                            'admin_status':true,
+                          },
+                          
+                        });
                       }
 
                       try {
@@ -177,11 +187,7 @@ class _ManagerFormState extends State<ManagerForm> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => BookCreatedPage(
-                                  book: Book(
-                                      name: _name,
-                                      location: _location,
-                                      bookId: _id))));
+                              builder: (context) =>AdminPage() ));
                     }
                   },
                 ),
@@ -192,10 +198,11 @@ class _ManagerFormState extends State<ManagerForm> {
   }
 }
 
-class BookCreatedPage extends StatelessWidget {
+
+class BookProfilePage extends StatelessWidget {
   final Book book;
 
-  const BookCreatedPage({Key key, this.book});
+  const BookProfilePage({Key key, this.book});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

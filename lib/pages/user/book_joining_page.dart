@@ -103,13 +103,14 @@ class _BookJoinPageState extends State<BookJoiningPage> {
                             if (_form.validate()) {
                               Map<String, dynamic> data = {
                                 "name": _memberName,
-                                "boarder_data": {
-                                  if (_roomNo != null) "roomNo": _roomNo,
-                                  if (_floorNo != null) "floorNo": _floorNo,
-                                  if (_blockNo != null) "blockNo": _blockNo
+                                "member_data": {
+                                  if (_roomNo != null) "room_no": _roomNo,
+                                  if (_floorNo != null) "floor_no": _floorNo,
+                                  if (_blockNo != null) "block_no": _blockNo
                                 },
                                 if (_roomNo != null)"joining_message": _message,
-                                "request_date": DateTime.now()
+                                "request_date": DateTime.now(),
+                                "request_status":"pending"
                               };
                               joinRequest() {
                                 _bookRef.collection('Join_Requests').add(data);
