@@ -1,20 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:mealbook/models/member_model.dart';
+import 'package:mealbook/providers/common_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../member_details_page.dart';
 
 
-class MemberList extends StatefulWidget {
-  final List<Member> members;
-
-  const MemberList({Key key, this.members}) : super(key: key);
-
+class MembersList extends StatefulWidget {
+  final String bookId;
+ MembersList({Key key, this.bookId}) : super(key: key);
   @override
-  _MemberListState createState() => _MemberListState();
+  _MembersListState createState() => _MembersListState();
 }
 
-class _MemberListState extends State<MemberList> {
+class _MembersListState extends State<MembersList> {
+  //CollectionReference _bookRef = Firestore.instance.collection('Books');
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+var members=Provider.of<List<Member>>(context);
+var _func=Provider.of<CommonFunc>(context);
+    return members!=null?ListView.builder(
+                shrinkWrap: true,
+                itemCount: members.length,
+                itemBuilder: (context, index) {
+                  var member = members[index];
+                  return Card(
+                    child: ListTile(
+                      leading: CircleAvatar(backgroundColor: Colors.blueGrey),
+                      title: Text(member.name),
+                      trailing: Icon(Icons.more_vert),
+                      onTap: ()=>_func.pushPage(context,MemberDetailsPage(member: member,)),
+                    ),
+
+                  );
+                },
+              ):CircularProgressIndicator();
+        
   }
 }
 

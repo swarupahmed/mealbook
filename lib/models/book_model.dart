@@ -6,7 +6,7 @@ class Book {
   String bookId;
   String createdAt;
   String description;
-  JoiningRequirements joiningRequirements;
+  MealRoutine mealRoutine;
 
   Book(
       {this.name,
@@ -14,19 +14,15 @@ class Book {
       this.description,
       this.location,
       this.createdAt,
-      this.joiningRequirements});
+      this.mealRoutine});
 
   Book.fromSnap(DocumentSnapshot document) {
-    Map<String, dynamic> data=document.data;
+    Map<String, dynamic> data = document.data;
     name = data['name'].toString();
     bookId = data['bookId'].toString();
     description = data['description'].toString();
     location = data['location'].toString();
     createdAt = data['createdAt'].toString();
-    joiningRequirements = JoiningRequirements(
-        data["joining_requirements"]["roomNo"]??'',
-        data["joining_requirements"]["floorNo"]??'',
-        data["joining_requirements"]["blockNo"])??'';
   }
 
   Map<String, dynamic> toJson() {
@@ -37,11 +33,32 @@ class Book {
   }
 }
 
+class MealRoutine {
+  bool morning;
+  bool noon;
+  bool night;
+
+  MealRoutine({this.morning, this.noon, this.night});
+
+  MealRoutine.fromJson(Map<String, dynamic> data) {
+    morning = data['morning'];
+    noon = data['noon'];
+    night = data['night'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['morning']=this.morning;
+    data['noon']=this.noon;
+    data['night']=this.night;
+    return data;
+  }
+}
+
 class JoiningRequirements {
   bool roomNoCheck;
-  bool floorNoCheck; 
+  bool floorNoCheck;
   bool blockNoCheck;
 
   JoiningRequirements(this.floorNoCheck, this.roomNoCheck, this.blockNoCheck);
-
 }

@@ -4,9 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mealbook/models/book_model.dart';
 import 'package:mealbook/pages/admin/admin_page.dart';
 import 'package:mealbook/pages/widgets/dialogs.dart';
+import 'package:mealbook/pages/widgets/meal_check_box.dart';
 import 'package:provider/provider.dart';
-
-
 
 class CreateManager extends StatelessWidget {
   @override
@@ -31,9 +30,8 @@ class _ManagerFormState extends State<ManagerForm> {
   final _formKey = GlobalKey<FormState>();
   String _name, _location, _description;
 
-  bool roomNoCheck = false;
-  bool floorNoCheck = false;
-  bool blockNoCheck = false;
+
+  MealRoutine _mealRoutine=MealRoutine(morning:false,noon:false,night:false);
 
   @override
   Widget build(BuildContext context) {
@@ -72,33 +70,28 @@ class _ManagerFormState extends State<ManagerForm> {
             SizedBox(
               height: 20,
             ),
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text("Boarder Data"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Checkbox(
-                            value: roomNoCheck,
-                            onChanged: (bool value) =>
-                                setState(() => roomNoCheck = value)),
-                        Text("Room No"),
-                      ],
-                    ),
-                    Checkbox(
-                        value: floorNoCheck,
-                        onChanged: (bool value) =>
-                            setState(() => floorNoCheck = value)),
-                    Text("Floor No"),
-                    Checkbox(
-                        value: blockNoCheck,
-                        onChanged: (bool value) =>
-                            setState(() => blockNoCheck = value)),
-                    Text("Block No"),
-                  ],
-                )
+                Text('Daily Meal', style: TextStyle(fontSize: 16)),
+                MealCheckBox(
+                  mealRoutine: _mealRoutine,
+                  onChangedMorning: (val) {
+                    setState(() {
+                      _mealRoutine.morning = val;
+                    });
+                  },
+                  onChangedNoon: (val) {
+                    setState(() {
+                      _mealRoutine.noon = val;
+                    });
+                  },
+                  onChangedNight: (val) {
+                    setState(() {
+                      _mealRoutine.night = val;
+                    });
+                  },
+                ),
               ],
             ),
             SizedBox(
@@ -113,11 +106,15 @@ class _ManagerFormState extends State<ManagerForm> {
                     style: TextStyle(fontSize: 17),
                   ),
                   onPressed: () async {
+                    
+                      
                     // save the fields..
                     final form = _formKey.currentState;
                     form.save();
 
                     if (form.validate()) {
+                      
+                      
                       List<String> _indexer(List text) {
                         List<String> list = [];
                         for (int i = 0; i < text.length; i++) {
@@ -134,26 +131,23 @@ class _ManagerFormState extends State<ManagerForm> {
                       List<String> indexedNameList = _indexer(splitNameList);
                       List<String> indexedLocationList =
                           _indexer(splitLocationList);
-
                       //create a system in database
-                      DocumentReference bookRef=ref.collection('Books').document();
-                      DocumentReference userRef=ref.collection('User').document(user.uid);
+                      DocumentReference bookRef =
+                          ref.collection('Books').document();
+                      DocumentReference userRef =
+                          ref.collection('User').document(user.uid);
                       String _id = bookRef.documentID;
                       setPanel() async {
                         await bookRef.setData(
                           {
+                            'bookId': _id,
                             'name': _name,
                             "location": _location,
                             "description": _description,
-                            'bookId': _id,
+                            "meal_routine": _mealRoutine.toJson(),
                             'indexes': indexedNameList,
                             "indexedLocation": indexedLocationList,
                             "createdAt": DateTime.now(),
-                            "joining_requirements": {
-                              "roomNo": roomNoCheck,
-                              "floorNo": floorNoCheck,
-                              "blockNo": blockNoCheck
-                            }
                           },
                         );
                         await bookRef
@@ -166,13 +160,13 @@ class _ManagerFormState extends State<ManagerForm> {
                         await userRef
                             .collection('User_Books')
                             .document()
-                            .setData({'name': _name, 'bookId': _id, 'admin':true});
+                            .setData(
+                                {'name': _name, 'bookId': _id, 'admin': true});
                         await userRef.updateData({
-                          "active_book":{
-                            'book_id':_id,
-                            'admin_status':true,
+                          "active_book": {
+                            'book_id': _id,
+                            'admin_status': true,
                           },
-                          
                         });
                       }
 
@@ -184,10 +178,8 @@ class _ManagerFormState extends State<ManagerForm> {
                                 ErrorDialogue(error.toString()),
                             context: context);
                       }
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>AdminPage() ));
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => AdminPage()));
                     }
                   },
                 ),
@@ -197,7 +189,6 @@ class _ManagerFormState extends State<ManagerForm> {
         ));
   }
 }
-
 
 class BookProfilePage extends StatelessWidget {
   final Book book;

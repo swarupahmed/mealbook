@@ -14,12 +14,11 @@ class BookJoiningPage extends StatefulWidget {
 
 class _BookJoinPageState extends State<BookJoiningPage> {
   final _formKey = GlobalKey<FormState>();
-  String _memberName, _floorNo, _roomNo, _blockNo, _message;
+  String _memberName, _message;
   @override
   Widget build(BuildContext context) {
     DocumentReference _bookRef =
         Firestore.instance.collection('Books').document(widget.book.bookId);
-    print(widget.book.joiningRequirements.blockNoCheck);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -45,33 +44,33 @@ class _BookJoinPageState extends State<BookJoiningPage> {
                       validator: (value) =>
                           value.isEmpty ? "Enter your Name" : null,
                     ),
-                    if (widget.book.joiningRequirements.roomNoCheck)
-                      TextFormField(
-                        onSaved: (value) => _roomNo = value,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(labelText: "Room No"),
-                        validator: (value) =>
-                            value.isEmpty ? "Room No is required" : null,
-                      ),
-                    if (widget.book.joiningRequirements.floorNoCheck)
-                      TextFormField(
-                        onSaved: (value) => _floorNo = value,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(labelText: "Floor no"),
-                        validator: (value) =>
-                            value.isEmpty ? "Floor No is required" : null,
-                      ),
-                    if (widget.book.joiningRequirements.blockNoCheck)
-                      TextFormField(
-                        onSaved: (value) => _blockNo = value,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(labelText: "Block No"),
-                        validator: (value) =>
-                            value.isEmpty ? "Block No is required" : null,
-                      ),
+                    // if (widget.book.joiningRequirements.roomNoCheck)
+                    //   TextFormField(
+                    //     onSaved: (value) => _roomNo = value,
+                    //     keyboardType: TextInputType.number,
+                    //     textInputAction: TextInputAction.next,
+                    //     decoration: InputDecoration(labelText: "Room No"),
+                    //     validator: (value) =>
+                    //         value.isEmpty ? "Room No is required" : null,
+                    //   ),
+                    // if (widget.book.joiningRequirements.floorNoCheck)
+                    //   TextFormField(
+                    //     onSaved: (value) => _floorNo = value,
+                    //     keyboardType: TextInputType.number,
+                    //     textInputAction: TextInputAction.next,
+                    //     decoration: InputDecoration(labelText: "Floor no"),
+                    //     validator: (value) =>
+                    //         value.isEmpty ? "Floor No is required" : null,
+                    //   ),
+                    // if (widget.book.joiningRequirements.blockNoCheck)
+                    //   TextFormField(
+                    //     onSaved: (value) => _blockNo = value,
+                    //     keyboardType: TextInputType.number,
+                    //     textInputAction: TextInputAction.next,
+                    //     decoration: InputDecoration(labelText: "Block No"),
+                    //     validator: (value) =>
+                    //         value.isEmpty ? "Block No is required" : null,
+                    //   ),
                     TextFormField(
                       onSaved: (value) => _message = value,
                       keyboardType: TextInputType.multiline,
@@ -81,12 +80,7 @@ class _BookJoinPageState extends State<BookJoiningPage> {
                       validator: (value) =>
                           value.isEmpty ? "A message for admin" : null,
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -103,14 +97,9 @@ class _BookJoinPageState extends State<BookJoiningPage> {
                             if (_form.validate()) {
                               Map<String, dynamic> data = {
                                 "name": _memberName,
-                                "member_data": {
-                                  if (_roomNo != null) "room_no": _roomNo,
-                                  if (_floorNo != null) "floor_no": _floorNo,
-                                  if (_blockNo != null) "block_no": _blockNo
-                                },
-                                if (_roomNo != null)"joining_message": _message,
+                                "joining_message": _message,
                                 "request_date": DateTime.now(),
-                                "request_status":"pending"
+                                "request_status": "pending"
                               };
                               joinRequest() {
                                 _bookRef.collection('Join_Requests').add(data);

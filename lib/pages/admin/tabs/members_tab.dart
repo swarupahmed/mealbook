@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:mealbook/models/member_model.dart';
 
 import 'package:mealbook/models/user_model.dart';
-import 'package:provider/provider.dart';
 
+import 'package:provider/provider.dart';
+import 'members_list.dart';
 
 class AdminMemberTab extends StatefulWidget {
-  const AdminMemberTab({Key key}) : super(key: key);
+  AdminMemberTab({Key key}) : super(key: key);
   @override
   _AdminMemberTabState createState() => _AdminMemberTabState();
 }
@@ -16,6 +17,7 @@ class _AdminMemberTabState extends State<AdminMemberTab> {
   @override
   Widget build(BuildContext context) {
     var joinRequests = Provider.of<List<JoinRequest>>(context);
+    var userData = Provider.of<UserData>(context) ?? null;
 
     return Column(
       children: <Widget>[
@@ -23,8 +25,9 @@ class _AdminMemberTabState extends State<AdminMemberTab> {
             ? RequestNotifications(
                 requests: joinRequests,
               )
-            : null,
+            : Container(),
         Text('Members List'),
+       MembersList(bookId: userData.activeBook.bookId)
       ],
     );
   }
@@ -58,14 +61,7 @@ class _RequestNotificationsState extends State<RequestNotifications> {
                     .setData({
                   'member_id': request.id,
                   'name': request.name,
-                  'member_Data': {
-                    if (request.memberData.roomNo != null)
-                      'room_no': request.memberData.roomNo,
-                    if (request.memberData.roomNo != null)
-                      'floor_no': request.memberData.floorNo,
-                    if (request.memberData.roomNo != null)
-                      'block_no': request.memberData.blockNo,
-                  },
+              
                   'joined_date': FieldValue.serverTimestamp()
                 });
                 _bookRef
@@ -83,15 +79,8 @@ class _RequestNotificationsState extends State<RequestNotifications> {
                     .updateData({'request_status': 'deleted'});
               }
 
-              String roomData = request.memberData.roomNo != null
-                  ? 'room:${request.memberData.roomNo}'
-                  : '';
-              String floorData = request.memberData.floorNo != null
-                  ? 'room:${request.memberData.roomNo}'
-                  : '';
-              String blockData = request.memberData.blockNo != null
-                  ? 'room:${request.memberData.roomNo}'
-                  : '';
+           
+                
               return Card(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,8 +91,7 @@ class _RequestNotificationsState extends State<RequestNotifications> {
                           request.name,
                           style: TextStyle(fontSize: 18),
                         ),
-                        Text(roomData + floorData + blockData,
-                            style: TextStyle(fontSize: 14)),
+                    
                       ],
                     ),
                     Row(
@@ -129,3 +117,4 @@ class _RequestNotificationsState extends State<RequestNotifications> {
         : Container();
   }
 }
+

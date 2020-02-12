@@ -30,7 +30,7 @@ Stream<Book> bookStream(bookId) {
       .map((document) => Book.fromSnap(document));
 }
 
-Stream<List<Member>> membersStream(String bookId) {
+Stream<List<Member>> memberStream(String bookId) {
   return Firestore.instance
       .collection('Books')
       .document(bookId)
@@ -43,7 +43,9 @@ Stream<List<Member>> membersStream(String bookId) {
 
 Stream<List<JoinRequest>> joinRequestStream(String bookId) {
   return Firestore.instance
-      .collection('Books').document(bookId).collection('Join_Requests')
+      .collection('Books')
+      .document(bookId)
+      .collection('Join_Requests')
       .where('request_status',isEqualTo: 'pending')
       .snapshots()
       .map((qsnap) => qsnap.documents
