@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mealbook/models/book_model.dart';
-import 'package:mealbook/pages/user/book_joining_page.dart';
+import 'package:mealbook/src/models/book_model.dart';
+import 'package:mealbook/src/pages/book_joining_page.dart';
+
 
 class BookDetailsPage extends StatefulWidget {
   final Book book;

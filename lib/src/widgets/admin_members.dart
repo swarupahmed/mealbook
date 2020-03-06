@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mealbook/models/member_model.dart';
-
-import 'package:mealbook/models/user_model.dart';
+import 'package:mealbook/src/models/member_model.dart';
+import 'package:mealbook/src/models/user_model.dart';
 
 import 'package:provider/provider.dart';
 import 'members_list.dart';
@@ -17,7 +16,7 @@ class _AdminMemberTabState extends State<AdminMemberTab> {
   @override
   Widget build(BuildContext context) {
     var joinRequests = Provider.of<List<JoinRequest>>(context);
-    var userData = Provider.of<UserData>(context) ?? null;
+
 
     return Column(
       children: <Widget>[
@@ -27,7 +26,9 @@ class _AdminMemberTabState extends State<AdminMemberTab> {
               )
             : Container(),
         Text('Members List'),
-       MembersList(bookId: userData.activeBook.bookId)
+        //TODO: show list for active month
+        // Show List for Whole Book
+       MembersList()
       ],
     );
   }
@@ -46,7 +47,7 @@ class _RequestNotificationsState extends State<RequestNotifications> {
   @override
   Widget build(BuildContext context) {
     var userData = Provider.of<UserData>(context);
-    var requests = widget.requests;
+    var requests = userData!=null ?widget.requests :null;
     return (requests != null)
         ? ListView.builder(
             shrinkWrap: true,
@@ -56,7 +57,7 @@ class _RequestNotificationsState extends State<RequestNotifications> {
               _accept() {
                 _bookRef
                     .document(userData.activeBook.bookId)
-                    .collection('Members')
+                    .collection('All_Members')
                     .document(request.id)
                     .setData({
                   'member_id': request.id,

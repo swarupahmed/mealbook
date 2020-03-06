@@ -1,34 +1,48 @@
-
 import 'package:flutter/material.dart';
-
-import 'package:mealbook/connections/streams.dart';
-import 'package:mealbook/models/user_model.dart';
+import 'package:mealbook/src/models/book_model.dart';
+import 'package:mealbook/src/models/member_model.dart';
+import 'package:mealbook/src/models/monthly_book.dart';
+import 'package:mealbook/src/models/monthly_member_model.dart';
+import 'package:mealbook/src/models/user_model.dart';
+import 'package:mealbook/src/sevices/streams.dart';
 
 import 'package:provider/provider.dart';
 
-import 'admin/admin_page.dart';
-import 'member/member_page.dart';
+import 'admin_page.dart';
+import 'member_page.dart';
 import 'user_home_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var userData = Provider.of<UserData>(context) ?? null;
-    return (userData?.activeBook != null)
+    var userData = Provider.of<UserData>(context);
+    var activeBook = userData?.activeBook;
+    var bookId = activeBook?.bookId;
+    return (activeBook != null)
         ? MultiProvider(
             providers: [
-              StreamProvider.value(
-                value: bookStream(userData.activeBook.bookId),
-              ),
-              StreamProvider.value(
-                value: memberStream(userData.activeBook.bookId),
+              // StreamProvider<List<Member>>.value(
+              //   value: memberStream(activebook.bookId),
+              // ),
+              StreamProvider<List<MonthlyMember>>.value(
+                value: monthlyMemberStream(bookId),
+                catchError: (_, err) {
+                  print(err.toString());
+                  return List<MonthlyMember>();
+                },
               ),
             ],
-            child: userData.activeBook.adminStatus
+            child: activeBook.adminStatus
                 ? MultiProvider(
                     providers: [
-                      StreamProvider.value(
-                        value: joinRequestStream(userData.activeBook.bookId),
+                      StreamProvider<List<JoinRequest>>.value(
+                        value: joinRequestStream(bookId),
+                      ),
+                      StreamProvider<Book>.value(
+                        value: bookStream(bookId),
+                      ),
+                      StreamProvider<MonthlyBook>.value(
+                        value: monthlyBookStream(bookId),
                       ),
                     ],
                     child: AdminPage(),
@@ -38,8 +52,6 @@ class HomePage extends StatelessWidget {
         : UserHomePage();
   }
 }
-
-
 
 class FirstButtons extends StatelessWidget {
   final String buttonName;

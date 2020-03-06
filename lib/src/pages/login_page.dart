@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mealbook/src/sevices/auth_service.dart';
+import 'package:mealbook/src/sevices/global_provider.dart';
 import 'package:provider/provider.dart';
-import 'auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final authService=Provider.of<AuthService>(context);
+    final global=Provider.of<Global>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text("Login Page Flutter Firebase"),
@@ -59,9 +61,9 @@ class _LoginPageState extends State<LoginPage> {
                                   email: _email, password: _password);
                               print(result);
                             } on AuthException catch (error) {
-                              return _buildErrorDialog(context, error.message);
+                              return global.buildErrorDialog(context, error.message);
                             } on Exception catch (error) {
-                              return _buildErrorDialog(context, error.toString());
+                              return global.buildErrorDialog(context, error.toString());
                             }
                           }
                         },
@@ -81,9 +83,9 @@ class _LoginPageState extends State<LoginPage> {
                                   _email, _password);
                               print(result);
                             } on AuthException catch (error) {
-                              return _buildErrorDialog(context, error.message);
+                              return global.buildErrorDialog(context, error.message);
                             } on Exception catch (error) {
-                              return _buildErrorDialog(context, error.toString());
+                              return global.buildErrorDialog(context, error.toString());
                             }
                           }
                         },
@@ -93,24 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                 ]))));
   }
 
-  Future _buildErrorDialog(BuildContext context, _message) {
-    return showDialog(
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Error Message'),
-          content: Text(_message),
-          actions: <Widget>[
-            FlatButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                })
-          ],
-        );
-      },
-      context: context,
-    );
-  }
+
 }
 
 

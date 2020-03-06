@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mealbook/models/book_model.dart';
-import 'package:mealbook/pages/admin/admin_page.dart';
-import 'package:mealbook/pages/widgets/dialogs.dart';
-import 'package:mealbook/pages/widgets/meal_check_box.dart';
+import 'package:mealbook/src/models/book_model.dart';
+import 'package:mealbook/src/widgets/dialogs.dart';
+
 import 'package:provider/provider.dart';
 
 class CreateManager extends StatelessWidget {
@@ -29,9 +28,6 @@ class _ManagerFormState extends State<ManagerForm> {
 
   final _formKey = GlobalKey<FormState>();
   String _name, _location, _description;
-
-
-  MealRoutine _mealRoutine=MealRoutine(morning:false,noon:false,night:false);
 
   @override
   Widget build(BuildContext context) {
@@ -71,33 +67,6 @@ class _ManagerFormState extends State<ManagerForm> {
               height: 20,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Daily Meal', style: TextStyle(fontSize: 16)),
-                MealCheckBox(
-                  mealRoutine: _mealRoutine,
-                  onChangedMorning: (val) {
-                    setState(() {
-                      _mealRoutine.morning = val;
-                    });
-                  },
-                  onChangedNoon: (val) {
-                    setState(() {
-                      _mealRoutine.noon = val;
-                    });
-                  },
-                  onChangedNight: (val) {
-                    setState(() {
-                      _mealRoutine.night = val;
-                    });
-                  },
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 RaisedButton(
@@ -106,15 +75,11 @@ class _ManagerFormState extends State<ManagerForm> {
                     style: TextStyle(fontSize: 17),
                   ),
                   onPressed: () async {
-                    
-                      
                     // save the fields..
                     final form = _formKey.currentState;
                     form.save();
 
                     if (form.validate()) {
-                      
-                      
                       List<String> _indexer(List text) {
                         List<String> list = [];
                         for (int i = 0; i < text.length; i++) {
@@ -144,14 +109,16 @@ class _ManagerFormState extends State<ManagerForm> {
                             'name': _name,
                             "location": _location,
                             "description": _description,
-                            "meal_routine": _mealRoutine.toJson(),
+                            //"meal_routine": _mealRoutine.toJson(),
                             'indexes': indexedNameList,
                             "indexedLocation": indexedLocationList,
                             "createdAt": DateTime.now(),
+                            //for monthly book checks
+                            "all_monthly_books":[],
                           },
                         );
                         await bookRef
-                            .collection('Managers')
+                            .collection('Admins')
                             .document()
                             .setData({
                           'email': user.email,
@@ -178,8 +145,11 @@ class _ManagerFormState extends State<ManagerForm> {
                                 ErrorDialogue(error.toString()),
                             context: context);
                       }
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => AdminPage()));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ConfirmPage()));
+                              //switch book
                     }
                   },
                 ),
@@ -187,6 +157,15 @@ class _ManagerFormState extends State<ManagerForm> {
             )
           ]),
         ));
+  }
+}
+
+class ConfirmPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('Confirmed'),
+    );
   }
 }
 

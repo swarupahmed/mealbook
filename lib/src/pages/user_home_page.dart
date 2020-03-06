@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mealbook/auth/auth.dart';
+
+import 'package:mealbook/src/sevices/auth_service.dart';
+
 import 'package:provider/provider.dart';
 
 import 'home_page.dart';
-import 'user/create_admin_page.dart';
-import 'user/join_manager_page.dart';
+import 'join_manager_page.dart';
+import 'create_admin_page.dart';
 
 class UserHomePage extends StatefulWidget {
   @override

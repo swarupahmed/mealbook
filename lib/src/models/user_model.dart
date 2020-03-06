@@ -14,8 +14,8 @@ class UserData {
   });
 
   UserData.fromSnap(DocumentSnapshot document) {
-    Map<String, dynamic> data=document.data;
-    id=document.documentID;
+    Map<String, dynamic> data = document.data;
+    id = document.documentID;
     email = data['email'].toString();
     joined = data['joined'].toString();
     (data['active_book'] != null)

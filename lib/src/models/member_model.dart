@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Member {
+class BookMember {
   String id;
   String name;
   Timestamp joinDate;
 
 
-  Member({this.id,this.name, this.joinDate});
+  BookMember({this.id,this.name, this.joinDate});
 
-  Member.fromSnap(DocumentSnapshot document) {
+  BookMember.fromSnap(DocumentSnapshot document) {
     Map<String, dynamic> data=document.data;
     id=document.documentID;
     name = data['name'].toString();
@@ -33,11 +33,3 @@ class JoinRequest {
 
   }
 }
-
-// class MemberData {
-//   String roomNo;
-//   String floorNo;
-//   String blockNo;
-
-//   MemberData({this.roomNo, this.floorNo, this.blockNo});
-// }

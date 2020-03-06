@@ -1,11 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mealbook/auth/auth.dart';
-import 'package:mealbook/auth/login_page.dart';
-import 'package:mealbook/connections/streams.dart';
-import 'package:mealbook/pages/home_page.dart';
-import 'package:mealbook/providers/common_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'src/pages/home_page.dart';
+import 'src/pages/login_page.dart';
+
+import 'src/sevices/auth_service.dart';
+import 'src/sevices/global_provider.dart';
+import 'src/sevices/streams.dart';
 
 void main()=> runApp(MyApp());
 
@@ -19,10 +22,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged,),
-        ChangeNotifierProvider(create:(_)=> AuthService(),),
-
-        Provider(create: (_)=>CommonFunc(),)
+        StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
+        ChangeNotifierProvider<AuthService>(create:(_)=> AuthService(),),
+        Provider<Global>(create: (_)=>Global(),)
     ],
     child: MaterialApp(
       title: 'Meal Book',
@@ -41,7 +43,7 @@ class Home extends StatelessWidget {
          value: userDataStream(user.uid),
          child: HomePage());
      }else{
-       return LoginPage();}
-  
+       return LoginPage();
+       } 
   }
 }

@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mealbook/connections/streams.dart';
-import 'package:mealbook/models/book_model.dart';
-import 'package:mealbook/pages/widgets/bookDetails_page.dart';
+import 'package:mealbook/src/models/book_model.dart';
+import 'package:mealbook/src/sevices/streams.dart';
+import 'package:mealbook/src/widgets/bookDetails_page.dart';
+
 import 'package:provider/provider.dart';
 
 

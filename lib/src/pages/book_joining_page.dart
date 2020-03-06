@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mealbook/models/book_model.dart';
-import 'package:mealbook/pages/widgets/dialogs.dart';
+import 'package:mealbook/src/models/book_model.dart';
+import 'package:mealbook/src/widgets/dialogs.dart';
 
 class BookJoiningPage extends StatefulWidget {
   final String title = "Joining Form";
@@ -114,7 +114,7 @@ class _BookJoinPageState extends State<BookJoiningPage> {
                                     context: context);
                               }
 
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
